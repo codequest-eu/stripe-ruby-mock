@@ -44,11 +44,22 @@ module StripeMock
         params[:limit] ||= 10
 
         clone = payment_methods.clone
-
-        if params[:customer]
-          clone.delete_if { |_k, v| v[:customer] != params[:customer] }
+        clone.delete_if { |_k, v| v[:customer] != params[:customer] || v[:type] != params[:type] }
+        
+        if params[:customer].nil?
+          raise Stripe::InvalidRequestError.new(
+            'Missing required param: customer',
+            http_status: 400
+          )
         end
 
+        if params[:type].nil?
+          raise Stripe::InvalidRequestError.new(
+            'Missing required param: type',
+            http_status: 400
+          )
+        end
+        
         Data.mock_list_object(clone.values, params)
       end
       

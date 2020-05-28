@@ -262,6 +262,49 @@ shared_examples 'PaymentMethod API' do
         end
       end
     end
+
+    context 'with more payment method types attached' do
+      before do
+        2.times do
+          Stripe::PaymentMethod.attach(
+            Stripe::PaymentMethod.create(type: 'card', card: card_details).id,
+            customer: customer1.id,
+          )
+          Stripe::PaymentMethod.attach(
+            Stripe::PaymentMethod.create(type: 'sepa_debit', sepa_debit: sepa_debit_details).id,
+            customer: customer1.id,
+          )
+        end
+      end
+
+      it 'only lists requested one' do
+        expect(Stripe::PaymentMethod.list(customer: customer1.id, type: 'card').count).to eq(2)
+        expect(Stripe::PaymentMethod.list(customer: customer1.id, type: 'sepa_debit').count).to eq(2)
+      end
+    end
+
+    context 'without required params' do
+      it do
+        expect { Stripe::PaymentMethod.list }.to raise_error(
+          Stripe::InvalidRequestError,
+          'Missing required param: customer',
+        )
+      end
+
+      it do
+        expect { Stripe::PaymentMethod.list(type: 'card') }.to raise_error(
+          Stripe::InvalidRequestError,
+          'Missing required param: customer',
+        )
+      end
+
+      it do
+        expect { Stripe::PaymentMethod.list(customer: customer1.id) }.to raise_error(
+          Stripe::InvalidRequestError,
+          'Missing required param: type',
+        )
+      end
+    end
   end
 
   # post /v1/payment_methods/:id/attach
