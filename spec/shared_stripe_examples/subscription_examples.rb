@@ -31,6 +31,7 @@ shared_examples 'Customer Subscriptions' do
       expect(subscription.plan.to_hash).to eq(plan.to_hash)
       expect(subscription.metadata.foo).to eq("bar")
       expect(subscription.metadata.example).to eq("yes")
+      expect(subscription.latest_invoice).to eq('in_test_invoice')
 
       customer = Stripe::Customer.retrieve(customer.id)
       subscriptions = Stripe::Subscription.list(customer: customer.id)

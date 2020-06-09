@@ -141,6 +141,9 @@ module StripeMock
         subscriptions[subscription[:id]] = subscription
         add_subscription_to_customer(customer, subscription)
 
+        invoice = Stripe::Invoice.create(customer: customer_id)
+        subscription.merge!(latest_invoice: invoice[:id])
+
         subscriptions[subscription[:id]]
       end
 
