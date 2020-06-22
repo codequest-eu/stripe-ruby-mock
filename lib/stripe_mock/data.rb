@@ -410,6 +410,7 @@ module StripeMock
         starting_balance: 0,
         ending_balance: 0,
         next_payment_attempt: 1349825350,
+        auto_advance: true,
         charge: nil,
         discount: nil,
         subscription: nil
