@@ -69,6 +69,7 @@ module StripeMock
         'invoice.updated',
         'invoice.payment_succeeded',
         'invoice.payment_failed',
+        'invoice.sent',
         'invoiceitem.created',
         'invoiceitem.updated',
         'invoiceitem.deleted',
